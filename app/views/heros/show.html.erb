@@ -1,0 +1,23 @@
+<h2>My Hero</h2>
+<hr>
+
+
+<section class="row" style="margin-bottom: 15px;">
+    <div class="col-sm-3">
+        <p>Hero Name: <strong><%= @hero.name %></strong></p>
+        <p>Hero Battle Cry: <%= @hero.battle_cry %></p>
+        <p>Hero Bio: <%= @hero.bio %></p>
+        <p>
+            <%= form_tag hero_path(@hero.id), method: "delete" do %>
+                <input type="hidden" name="hero_id" value="<%=@hero.id%>"> 
+                <input type="hidden" name="_method" value="delete"> 
+                <a href="/heros" class="btn btn-info">My Heroes</a>
+                <a href="/heros/<%=@hero.id%>/edit" class="btn btn-info">Edit</a>
+                <%= submit_tag "Delete #{@hero.name}", class: "btn btn-danger" %>
+            <% end %>
+        </p>
+    </div>
+    <div class="col-sm">
+        <img width="500" src="/images/<%=@hero.img_path%>">
+    </div>
+</section

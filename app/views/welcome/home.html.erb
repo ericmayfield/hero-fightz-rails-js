@@ -1,0 +1,28 @@
+<!-- Jumbotron Header -->
+<header class="jumbotron my-4">
+  <h1 class="display-3">Welcome to HeroFightz!</h1>
+  <p class="lead">This is an exciting platform with many plans to grow in the future. In the meantime get started and prepare for battle by creating some heroes. In the coming weeks we will be rolling out the battle features.</p>
+  <a href="/register" class="btn btn-primary btn-lg">Get Started!</a>
+</header>
+<div><h3>Latest Heroes</h3></div>
+<!-- Page Features -->
+<div class="row">
+    <% @heros.each do |hero| %>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card">
+                <img class="card-img-top" width="255" src="/images/<%=hero.img_path%>" alt="<%=hero.name%>">
+                <div class="card-body">
+                <h4 class="card-title text-center"><%=hero.name%></h4>
+                <p class="card-text">
+                    <strong>Battle Cry:</strong> <%=hero.battle_cry%><br>
+                    <strong>Bio:</strong> <%=hero.bio%><br>
+                </p>
+                </div>
+                <!--<div class="card-footer">
+                <a href="#" class="btn btn-primary">Find Out More!</a>
+                </div>-->
+            </div>
+        </div>
+    <% end %>
+</div>
+<!-- /.row -->

@@ -1,0 +1,11 @@
+<% flash.each do |key, value| %>
+<div class="alert alert-<%= key %>"><%= value %></div>
+<% end %>
+
+<%= form_tag '/sessions', method: 'post' do %>
+    Email: <%= text_field_tag(:email) %>
+    Password: <%= password_field_tag(:password) %>
+    <%= submit_tag "Login" %>
+<% end %>
+<br>
+<%= link_to('Log in with Facebook!', '/auth/facebook') %>

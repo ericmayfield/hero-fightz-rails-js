@@ -1,0 +1,18 @@
+<p>Welcome, <%=@user.name%></p>
+<br>
+<% flash.each do |key, value| %>
+<div class="alert alert-<%= key %>"><%= value %></div>
+<% end %>
+<% if @user.heros.count < 1 %>
+    <p>You currently have 0 heroes. Let's fix that! Click 'Create a Hero' to get started.</p>
+<% else %>
+    <p>You currently have <%=@user.heros.count%> hero(s).</p>
+<% end %>
+<section>
+    <%= form_tag user_path(@user.id), method: "delete" do %>
+        <a class="btn btn-info" href="/heros/new">Create a Hero</a>
+        <a class="btn btn-info" href="/account/edit">Edit Account</a>
+        <%= submit_tag "Delete #{@user.name}", class: "btn btn-danger" %>
+    <% end %>
+</section>
+<br>

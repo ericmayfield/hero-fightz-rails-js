@@ -1,0 +1,12 @@
+<h1><%= @team.title %></h1>
+<p>
+<% if @team.heros.count > 0 %>
+    Your team has the following heros:<br>
+    <% @team.heros.each.with_index(1) do |hero, i| %>
+        <%= "#{i}. " %><%= link_to hero.name, hero_path(hero.id) %><br>
+    <% end %>
+<% else %>
+    This team has no heros.
+<% end %>
+
+</p>

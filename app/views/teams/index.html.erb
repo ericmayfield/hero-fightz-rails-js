@@ -1,0 +1,9 @@
+<% if @teams.count < 1 %>
+    Currently No Teams Exist. <%= link_to "Create A Team", new_team_path %>
+<% else %>
+    <ul>
+    <% @teams.each do |team| %>
+        <li><%= team.title %> <%= link_to "View Team", team_path(team) %>
+    <% end %>
+    </ul>
+<% end %>

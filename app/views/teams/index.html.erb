@@ -1,9 +1,34 @@
+<%= form_tag '/teams', method: 'post' do %>
+    Team Title: <%= text_field_tag 'team[title]' %>
+    <%= submit_tag  'Add Team' %>
+<% end %>
+
+
 <% if @teams.count < 1 %>
     Currently No Teams Exist. <%= link_to "Create A Team", new_team_path %>
 <% else %>
-    <ul>
+    <ul id="teams">
     <% @teams.each do |team| %>
         <li><%= team.title %> <%= link_to "View Team", team_path(team) %>
     <% end %>
     </ul>
 <% end %>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('form').submit(function(e) {
+            //prevent form from submitting the default way
+            e.preventDefault();
+            var values = $(this).serialize();
+
+            var posting = $.post('/teams', values, null, 'json');
+
+            posting.done(function(data) {
+                let team = data
+                $('ul#teams').append(`<li>${team['title']} <a href="/teams/${team['id']}">View Team</a></li>`)
+                console.log(team)
+            });
+
+        });
+    });
+</script>

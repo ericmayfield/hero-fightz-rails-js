@@ -14,7 +14,10 @@ class TeamsController < ApplicationController
         @team = Team.new(team_params)
 
         if @team.save
-            redirect_to team_path(@team)
+            respond_to do |format|
+                format.html { redirect_to team_path(@team) }
+                format.json { render json: @team}
+            end
         else
             render :new
         end

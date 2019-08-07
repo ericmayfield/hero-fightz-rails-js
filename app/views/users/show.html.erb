@@ -1,13 +1,11 @@
-<p>Welcome, <%=@user.name%></p>
+<p id="welcome"></p>
 <br>
 <% flash.each do |key, value| %>
 <div class="alert alert-<%= key %>"><%= value %></div>
 <% end %>
-<% if @user.heros.count < 1 %>
-    <p>You currently have 0 heroes. Let's fix that! Click 'Create a Hero' to get started.</p>
-<% else %>
-    <p>You currently have <%=@user.heros.count%> hero(s).</p>
-<% end %>
+<div id="hero-count">
+
+</div>
 <section>
     <%= form_tag user_path(@user.id), method: "delete" do %>
         <a class="btn btn-info" href="/heros/new">Create a Hero</a>
@@ -16,3 +14,31 @@
     <% end %>
 </section>
 <br>
+
+<script type="text/javascript" charset="utf-8">
+    class User {
+        constructor(name, email, heros) {
+            this.name = name;
+            this.email = email;
+            this.heros = heros;
+            this.heroCount = this.heros.length;
+        }
+    
+        render() {
+            $("#welcome").append(`Welcome, ${this.name}.`)
+
+            if( this.heroCount > 0 ) {
+                $("#hero-count").append(`<p>You currently have ${this.heroCount} hero(s).</p>`);
+            } else {
+                $("#hero-count").append(`<p>You currently have 0 heroes. Let's fix that! Click 'Create a Hero' to get started.</p>`);
+            }
+        }
+    }
+
+    $(function () {
+        $.get("/account.json", function(data) {
+            currentUser = new User(data['name'], data['email'], data['heros']);
+            currentUser.render();
+        });
+    });
+</script>

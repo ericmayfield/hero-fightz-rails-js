@@ -40,6 +40,9 @@ gem 'rb-readline'
 gem 'omniauth' 
 gem 'omniauth-facebook'
 
+#OmniAuth Rails Cross Site Request Forgery Protection Gem
+gem "omniauth-rails_csrf_protection"
+
 # DotEvn Gem
 gem 'dotenv-rails'
 

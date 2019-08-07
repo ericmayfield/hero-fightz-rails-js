@@ -1,4 +1,5 @@
 class HerosController < ApplicationController
+    skip_before_action :verify_authenticity_token, only: [:destroy]
     before_action :load_hero, only: [:show, :edit, :update, :destroy]
     before_action :belongs_to_user, except: [:new, :create, :index]
     before_action :must_be_logged_in
@@ -6,21 +7,22 @@ class HerosController < ApplicationController
     def index
         if params[:team_id]
             @heros = Hero.heros_by_team_id(params[:team_id])
+ 
+            # @heros = @heros.select { |hero| hero.name.downcase.include?(params[:search].downcase) }
+            @heros = @heros.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
 
-            if params[:search]
-                # @heros = @heros.select { |hero| hero.name.downcase.include?(params[:search].downcase) }
-                @heros = @heros.where('name LIKE ?', "%#{params[:search]}%")
-            else
-                @heros
+            respond_to do |format|
+                format.html
+                format.json { render json: @heros, status: 200}
             end
         else
             @heros = current_user.heros
 
-            if params[:search]
-                #@heros = @heros.select { |hero| hero.name.downcase.include?(params[:search].downcase) }
-                @heros = @heros.where('name LIKE ?', "%#{params[:search]}%")
-            else
-                @heros
+            @heros = @heros.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
+
+            respond_to do |format|
+                format.html
+                format.json { render json: @heros, status: 200}
             end
         end
     end
@@ -56,7 +58,7 @@ class HerosController < ApplicationController
 
     def destroy
         @hero.delete
-        redirect_to account_path
+        render json: @hero
     end
 
     private

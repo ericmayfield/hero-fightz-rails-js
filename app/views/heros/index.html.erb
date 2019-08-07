@@ -5,30 +5,89 @@
     <%= submit_tag "Search" %>
 <% end %>
 <br>
+<div id="heros_wrapper">
 <%  if @heros.count < 1 %>
         <p>You currently have no heroes. <a href="/heros/new">Click here</a> to create a hero!</p>
-<%  else
-        @heros.each do |hero| %>
-            <section class="row" style="margin-bottom: 15px; height:250px;">
-                <div class="col-sm-3">
-                    <p>Hero Name: <strong><%= hero.name %></strong></p>
-                    <p>Hero Battle Cry: <%= hero.battle_cry %></p>
-                    <p>Hero Bio: <%= hero.bio %></p>
-                    <p>
-                        <a href="/heros/<%=hero.id%>/edit" class="btn btn-info">Edit</a>
-                        <a href="/heros/<%=hero.id%>" class="btn btn-info">View</a>
-                        <br>
-                        <%= form_tag hero_path(hero.id), method: "delete" do %>
-                            <input type="hidden" name="hero_id" value="<%=hero.id%>"> 
-                            <input type="hidden" name="_method" value="delete"> 
-                            <%= submit_tag "Delete #{hero.name}", class: "btn btn-danger" %>
-                        <% end %>
-                    </p>
-                </div>
-                <div class="col-sm">
-                    <img width="300" src="/images/<%=hero.img_path%>">
-                </div>
-            </section>
-            <hr>
     <% end %>
-<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $.get("/heros.json", function(data) {
+            data.forEach(function(hero) { 
+               $("#heros_wrapper").append(  
+                    `<section class="row" id="hero-${hero.id}" style="margin-bottom: 15px; height:250px;">
+                        <div class="col-sm-3">
+                            <p>Hero Name: <strong>${hero.name}</strong></p>
+                            <p>Hero Battle Cry: ${hero.battle_cry}</p>
+                            <p>Hero Bio: ${hero.bio}</p>
+                            <p>
+                                <a href="/heros/${hero.id}/edit" class="btn btn-info">Edit</a>
+                                <a href="/heros/${hero.id}" class="btn btn-info">View</a>
+                                <br>
+                                <button class="btn btn-danger delete" data-id="${hero.id}">Delete ${hero.name}</button>
+                            </p>
+                        </div>
+                        <div class="col-sm">
+                            <img width="300" src="/images/${hero.img_path}">
+                        </div>
+                    </section>
+                    <hr>`
+                ); 
+            });
+
+            $(".delete").on("click", function(e) {
+                e.preventDefault();
+                let heroId = this.dataset.id
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/heros/${heroId}`,
+                    dataType: 'json',
+                    success: function(hero){
+                        alert(`${hero.name} has successfully been deleted!`)
+                        $(`#hero-${heroId}`).hide()
+                    }
+                })
+            })
+
+            $("form").on("submit", function(e) {
+                e.preventDefault();
+
+                $.get(`/heros.json?search=${this.search.value}`, function(data) {
+                    $("#heros_wrapper").empty();
+                    if (data.length > 0)  {
+                        data.forEach(function(hero) { 
+                            $("#heros_wrapper").append(  
+                                    `<section class="row" id="hero-${hero.id}" style="margin-bottom: 15px; height:250px;">
+                                        <div class="col-sm-3">
+                                            <p>Hero Name: <strong>${hero.name}</strong></p>
+                                            <p>Hero Battle Cry: ${hero.battle_cry}</p>
+                                            <p>Hero Bio: ${hero.bio}</p>
+                                            <p>
+                                                <a href="/heros/${hero.id}/edit" class="btn btn-info">Edit</a>
+                                                <a href="/heros/${hero.id}" class="btn btn-info">View</a>
+                                                <br>
+                                                <button class="btn btn-danger delete" data-id="${hero.id}">Delete ${hero.name}</button>
+                                            </p>
+                                        </div>
+                                        <div class="col-sm">
+                                            <img width="300" src="/images/${hero.img_path}">
+                                        </div>
+                                    </section>
+                                    <hr>`
+                            ); 
+                        });
+                    } else {
+                        $("#heros_wrapper").append(  "<span class='alert'>No heroes matched this search criteria.</span>" );
+                    }                   
+                });
+            });
+
+        });
+    });
+
+
+
+
+</script>

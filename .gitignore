@@ -1,0 +1,3 @@
+# ignore /tmp/ directory
+/tmp/
+/tmp/cache
